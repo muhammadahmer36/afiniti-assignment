@@ -1,0 +1,109 @@
+
+For Queues 
+
+/etc/asterisk/queues.conf
+
+[general]
+
+persistentmembers = yes
+
+[callcenter]
+
+musiconhold = default
+strategy = rrmemory
+timeout = 20
+retry = 5
+leavewhenempty = no
+monitor-format=wav
+
+
+
+member => SIP/1001
+member => SIP/1002
+"queues.conf" 570L, 25245C   
+
+
+
+SIP User
+
+/etc/asterisk/sip.conf
+
+
+[1000]
+;Caller
+context=main
+type=friend
+username=1000
+Callerid="1000"
+secret=1000
+host=dynamic
+dtmfmode=rfc2833
+disallow=all
+allow=alaw
+allow=ulaw
+
+[1001]
+;;Agent phone
+context=main
+type=friend
+Callerid="1001"
+username=1001
+secret=1001
+host=dynamic
+dtmfmode=rfc2833
+disallow=all
+allow=alaw
+allow=ulaw
+
+[1002]
+;;Agent phone
+context=main
+type=friend
+Callerid="1002"
+username=1002
+secret=1002
+host=dynamic
+dtmfmode=rfc2833
+disallow=all
+allow=alaw
+allow=ulaw
+
+
+Dialplan -
+
+/etc/asterisk/extension.conf
+
+[general]
+
+static=yes
+writeprotect=no
+autofallthrough=yes
+clearglobalvars=no
+priorityjumping=no
+
+[globals]
+
+CONSOLE=Console/dsp				; Console interface for demo
+IAXINFO=guest					; IAXtel username/password
+TRUNK=Zap/g2					; Trunk interface
+
+
+
+
+
+[main]
+;Phone Extensions
+exten => _1XXX,1,NoOp(Dialling phone ${EXTEN})
+exten => _1XXX,n,Dial(SIP/${EXTEN},,rotwh)
+exten => _1XXX,n,Hangup
+
+
+
+exten => _1234,1,Noop(----Welcome Incoming calls --)
+same  => n,Answer()
+same => n,Queue(callcenter,tT)
+same => n,Hangup()
+
+
+
+"extensions.conf" 877L, 31963C  
