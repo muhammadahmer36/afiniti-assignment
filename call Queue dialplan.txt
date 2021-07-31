@@ -1,0 +1,114 @@
+For Queues 
+
+/etc/asterisk/queues.conf
+
+[general]
+
+persistentmembers = yes
+
+[callcenter]
+
+reportholdtime=yes
+monitor-format=wav
+monitor-join
+strategy = ringall
+announce-frequency=5
+periodic-announce-frequency=5
+announce-holdtime=yes
+announce-round-seconds=10
+reportholdtime=yes
+
+queue-youarenext = queue-youarenext
+queue-thereare = queue-thereare
+queue-callswaiting = queue-callswaiting
+queue-holdtime = queue-holdtime
+queue-minutes = queue-minutes
+queue-seconds = queue-seconds
+queue-thankyou = queue-thankyou
+queue-lessthan = queue-less-than
+queue-reporthold = queue-reporthold
+periodic-announce = queue-periodic-announce
+
+
+member => Agent/1000
+member => Agent/2000
+member => Agent/3000
+
+
+
+SIP User
+
+/etc/asterisk/sip.conf
+
+[1000]
+type=friend
+username=1000
+secret=1234
+insecure=port,invite
+host=dynamic
+allow=g729
+allow=ulaw
+allow=alaw
+context=caller_end
+canreinvite=yes
+nat=no
+qualify=yes
+dtmfmode=rfc2833
+
+[2000]
+type=friend
+username=2000
+secret=1234
+insecure=port,invite
+host=dynamic
+allow=g729
+allow=ulaw
+allow=alaw
+context=caller_end
+canreinvite=yes
+nat=no
+qualify=yes
+dtmfmode=rfc2833
+
+[3000]
+type=friend
+username=3000
+secret=1234
+insecure=port,invite
+host=dynamic
+allow=g729
+allow=ulaw
+allow=alaw
+context=caller_end
+canreinvite=yes
+nat=no
+qualify=yes
+dtmfmode=rfc2833
+
+
+Dialplan -
+
+/etc/asterisk/extension.conf
+
+[general]
+
+static=yes
+writeprotect=no
+autofallthrough=yes
+clearglobalvars=no
+priorityjumping=no
+
+[globals]
+
+CONSOLE=Console/dsp				; Console interface for demo
+IAXINFO=guest					; IAXtel username/password
+TRUNK=Zap/g2					; Trunk interface
+
+[caller_end]
+
+exten => 110,1,AgentCallbackLogin(8888,,@callcenter)
+
+exten => 111,1,Dial(SIP/${EXTEN})
+exten => 111,2,Hangup()
+
+exten => 112,1,Queue(callcenter|tThH|||100)

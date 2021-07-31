@@ -1,0 +1,42 @@
+oot@asterisk13-build /]# yum groupinstall –y Development Tools
+You will also need to install the following packages:
+
+[root@asterisk13-build /]#
+yum install –y ncurses-dev uuid-devel libuuid-devel libxml2-devel sqlite-devel bison subversion git-core
+
+
+
+[root@asterisk13-build /]# cd /usr/src/
+[root@asterisk13-build /]# wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz
+[root@asterisk13-build /]# tar –xzvf asterisk-13-current.tar.gz
+[root@asterisk13-build /]# cd asterisk-13.0.0
+[root@asterisk13-build /]# ./bootstrap.sh
+[root@asterisk13-build /]# ./configure
+[root@asterisk13-build /]# make && make install
+[root@asterisk13-build /]# make samples
+[root@asterisk13-build /]# sudo make config
+[root@asterisk13-build /]# make samples
+[root@asterisk13-build /]# chkconfig asterisk on
+
+
+
+From here, you can type asterisk –r and the asterisk CLI should appear. It should look like this :
+
+
+Asterisk 13.0.0, Copyright (C) 1999 - 2014, Digium, Inc. and others.
+Created by Mark Spencer <markster@digium.com>
+Asterisk comes with ABSOLUTELY NO WARRANTY; type 'core show warranty' for details.
+This is free software, with components licensed under the GNU General Public
+License version 2 and other licenses; you are welcome to redistribute it under
+certain conditions. Type 'core show license' for details.
+
+Connected to Asterisk 13.0.0 currently running on asterisk13-build (pid = 22632)
+asterisk13-build*CLI>
+These build steps works for CentOS 5.x-7.x
+Installing Development Tools is optional, but it makes the build a lot easier. This will be seen if you don’t install the package group.
+
+© 2014 Digium, Inc. All Rights Reserved. 
+
+
+
+-----------------
